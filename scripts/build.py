@@ -14,7 +14,7 @@ def javascript(*names):
 
 
 def main():
-    runtime = javascript("precision", "reader", "review", "resolve", "fulltext")
+    runtime = javascript("precision", "reader", "review", "resolve", "pdf-sources", "oa-download", "fulltext")
     interface = javascript("picker", "controller")
     script = runtime + b"\n\n\n\n" + interface
     files = {"manifest.json": (ROOT / "manifest.json").read_bytes(), "bootstrap.js": script}

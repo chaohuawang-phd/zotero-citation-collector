@@ -1,6 +1,5 @@
 // Download the cited work after its bibliographic record has been committed.
-// Use Zotero's own file resolvers and storage API. Stage and inspect the bytes
-// before making a child attachment: a publisher can return HTML or an EPUB.
+// Try each source lazily and use Zotero's storage API only after checking the file.
 const CitationFulltext = (() => {
   const pending = new Map();
   let queue = Promise.resolve();
@@ -12,7 +11,7 @@ const CitationFulltext = (() => {
 
   async function hasPDFHeader(path) {
     const sample = await Zotero.File.getBinaryContentsAsync(path, 1024);
-    return /%PDF-\d\.\d/.test(sample) && !/^\s*<(?:!doctype\s+html|html)\b/i.test(sample);
+    return /^(?:\xEF\xBB\xBF)?\s*%PDF-\d\.\d\b/.test(sample);
   }
 
   async function existingPDF(item, restoreSyncedFile = false) {
@@ -20,9 +19,13 @@ const CitationFulltext = (() => {
     const children = await Zotero.Items.getAsync(item.getAttachments());
     const missing = [];
     for (const child of children.filter(pdfChild)) {
-      const path = await child.getFilePathAsync();
-      if (path && await hasPDFHeader(path)) return child;
-      if (!path && child.isStoredFileAttachment()) missing.push(child);
+      try {
+        const path = await child.getFilePathAsync();
+        if (path && await hasPDFHeader(path)) return child;
+        if (!path && child.isStoredFileAttachment()) missing.push(child);
+      } catch (error) {
+        Zotero.debug("正文引文收藏：已有附件暂不可读 " + error);
+      }
     }
     if (restoreSyncedFile) {
       // A stored attachment may just be waiting for sync-on-demand.
@@ -70,10 +73,45 @@ const CitationFulltext = (() => {
   function checkRequest(url, isActive) {
     if (!isActive()) throw new Error("已停止下载");
     const u = new URL(url);
+    const host = u.hostname.replace(/\.$/, "");
     if (!["http:", "https:"].includes(u.protocol) || u.username || u.password
-        || !u.hostname.includes(".") || u.hostname.endsWith(".local") || u.hostname.endsWith(".localhost")
-        || /^[\d.]+$/.test(u.hostname) || u.hostname.includes(":")) {
+        || !host.includes(".") || host.endsWith(".local") || host.endsWith(".localhost")
+        || /^[\d.]+$/.test(host) || host.includes(":")) {
       throw new Error("全文来源不是公开网站");
+    }
+  }
+
+  async function* candidateFiles(item, candidate, active) {
+    yield* directPDFs(item, candidate);
+    // Zotero's native OA resolver is itself a function returning several URLs.
+    // Validate each returned file before deciding whether to skip the others.
+    const groups = [
+      { list: () => Zotero.Attachments.getFileResolvers(item, ["doi", "url", "oa"], true) },
+      { list: () => CitationPDFSources.providers(item, candidate), openCopy: true }
+    ];
+    for (const group of groups) {
+      if (!active()) return;
+      let sources;
+      try {
+        sources = group.list();
+      } catch (error) {
+        Zotero.debug("正文引文收藏：全文来源暂不可用 " + error);
+        continue;
+      }
+      for (const source of sources) {
+        if (!active()) return;
+        if (typeof source !== "function") {
+          yield source;
+          continue;
+        }
+        try {
+          for (const resolver of (await source()).slice(0, 16)) {
+            yield group.openCopy ? { ...resolver, openCopy: true } : resolver;
+          }
+        } catch (error) {
+          Zotero.debug("正文引文收藏：全文解析服务未返回候选 " + error);
+        }
+      }
     }
   }
 
@@ -82,39 +120,53 @@ const CitationFulltext = (() => {
     const found = await existingPDF(item, true);
     if (found) return { status: "existing", attachmentID: found.id };
     const files = Zotero.Attachments;
-    const resolvers = [
-      ...directPDFs(item, candidate),
-      ...files.getFileResolvers(item, ["doi", "url", "oa"], true)
-    ];
-    if (!resolvers.length) return { status: "unavailable" };
-    const tmp = await files.createTemporaryStorageDirectory();
+    const active = () => isActive() && !item.deleted;
+    const tried = new Set();
+    let tmp;
     try {
-      const path = PathUtils.join(tmp.path, "download.tmp");
-      for (const resolver of resolvers) {
-        if (!isActive() || item.deleted) return { status: "cancelled" };
-        const result = await files.downloadFirstAvailableFile([resolver], path, {
-          enforceFileType: true,
-          shouldDisplayCaptcha: false,
-          onBeforeRequest: url => checkRequest(url, isActive)
-        });
-        if (!result?.url || !await hasPDFHeader(path)) continue;
+      for await (const entry of candidateFiles(item, candidate, active)) {
+        if (!active()) return { status: "cancelled" };
+        const resolver = typeof entry === "string" ? { url: entry } : entry;
+        if (!resolver?.url && !resolver?.pageURL) continue;
+        const key = JSON.stringify([resolver.url, resolver.pageURL, resolver.referrer]);
+        if (tried.has(key)) continue;
+        tried.add(key);
+        if (!tmp) tmp = await files.createTemporaryStorageDirectory();
+        const path = PathUtils.join(tmp.path, "download.tmp");
+        let pdfURL;
+        try {
+          const check = url => checkRequest(url, active);
+          const result = resolver.openCopy
+            ? await CitationOADownload.download(resolver, path, check)
+            : await files.downloadFirstAvailableFile([resolver], path, {
+                enforceFileType: true, shouldDisplayCaptcha: false, onBeforeRequest: check
+              });
+          if (result?.url && await hasPDFHeader(path)) pdfURL = result.url;
+        } catch (error) {
+          Zotero.debug("正文引文收藏：候选全文下载失败 " + error);
+        }
+        if (!pdfURL) {
+          await IOUtils.remove(path, { ignoreAbsent: true });
+          continue;
+        }
         // A native Zotero sync, connector or another tab may have attached a
         // PDF while this download was underway. Keep the winner.
         const other = await existingPDF(item);
         if (other) return { status: "existing", attachmentID: other.id };
         if (!isActive() || item.deleted) return { status: "cancelled" };
-        const base = files.getFileBaseNameFromItem(item, { attachmentTitle: "PDF" }) || item.key;
+        const title = /^https?:\/\/(?:www\.|export\.)?arxiv\.org\//i.test(pdfURL) ? "PDF（arXiv 版本）" : "PDF";
+        const base = files.getFileBaseNameFromItem(item, { attachmentTitle: title }) || item.key;
         const filename = await Zotero.File.rename(path, base + ".pdf");
         const child = await files.createURLAttachmentFromTemporaryStorageDirectory({
-          directory: tmp.path, filename, title: "PDF", url: result.url,
+          directory: tmp.path, filename, title, url: pdfURL,
           contentType: "application/pdf", parentItemID: item.id, libraryID: item.libraryID
         });
         return { status: "added", attachmentID: child.id };
       }
-      return { status: isActive() ? "unavailable" : "cancelled" };
+      return { status: active() ? "unavailable" : "cancelled" };
     } finally {
       // On success Zotero has moved this directory into managed storage.
-      await IOUtils.remove(tmp.path, { recursive: true, ignoreAbsent: true });
+      if (tmp) await IOUtils.remove(tmp.path, { recursive: true, ignoreAbsent: true });
     }
   }
 

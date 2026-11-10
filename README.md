@@ -2,15 +2,15 @@
 
 在 Zotero 桌面版的 PDF 阅读器里，指向正文中的一条引用，即可把**被引用的论文**收藏到个人文库的指定分类。插件会优先复用库内已有条目，并在收藏后查找可用的全文 PDF。需要排阅读顺序时，可以顺手写下收藏理由、标上 1–5 星，回到文库直接按重要性排序。
 
-**适用版本：Zotero 桌面版 10.0.x。** [下载安装包 v1.1.0](https://github.com/chaohuawang-phd/zotero-citation-collector/releases/download/v1.1.0/Citation-Collector-Zotero10.xpi) · [查看版本说明](https://github.com/chaohuawang-phd/zotero-citation-collector/releases/tag/v1.1.0) · [引文收藏教程](#example) · [阅读标注与星级](#reading-priority)
+**适用于 Zotero 桌面版 10.0.x。** [下载仓库中的安装包 v1.2.0](https://raw.githubusercontent.com/chaohuawang-phd/zotero-citation-collector/main/dist/Citation-Collector-Zotero10.xpi) · [引文收藏教程](#example) · [阅读标注与星级](#reading-priority)
 
 ## 安装
 
 1. 下载上方的 `Citation-Collector-Zotero10.xpi`。
 2. 打开 Zotero 桌面版，进入 **工具 → 插件**（Tools → Plugins）。将下载的 XPI 拖入插件管理窗口，或在该窗口的齿轮菜单中选择从文件安装。
-3. 在插件列表确认 **正文引文收藏 1.1.0** 已启用。在 Zotero 内打开一篇 PDF，悬停在正文引文上即可开始。已打开的 PDF 若未出现按钮，可关闭阅读标签页再打开。
+3. 在插件列表确认 **正文引文收藏 1.2.0** 已启用。在 Zotero 内打开一篇 PDF，悬停在正文引文上即可开始。已打开的 PDF 若未出现按钮，可关闭阅读标签页再打开。
 
-升级时，从 [Releases](https://github.com/chaohuawang-phd/zotero-citation-collector/releases) 下载新 XPI，重复上述安装步骤。1.1.0 使用手动升级。
+升级时下载上方的 XPI，在每台使用此插件的电脑上重复安装步骤，即可覆盖旧版。
 
 <a id="example"></a>
 
@@ -49,7 +49,9 @@
 
 ![展开目标分类中的 Yang 论文可以查看 PDF，重复收藏时右下角提示“已在该分类”](docs/images/saved-result.svg)
 
-题录先保存，PDF 在后台查找。库里已有可用 PDF 时会直接复用。遇到无开放全文、站点限流或下载失败，题录仍保留，下次点击收藏可以重试。
+点击收藏后，题录先存入选定分类，插件随即在后台查找 PDF。若 OpenReview 或出版社返回验证页，插件会尝试其他来源。条目没有 DOI 时，可以按完整题名查询，再用作者或年份核对。下载成功后，展开原来的论文条目就能看到附件；来自 arXiv 的副本标为 **PDF（arXiv 版本）**。
+
+库里已有可用 PDF 时会直接复用。所有来源都未能提供匹配的 PDF 时，题录和阅读标注都保留。稍后再次收藏同一篇论文即可重试补全。
 
 <a id="reading-priority"></a>
 
@@ -76,7 +78,7 @@
 
 悬停和引文定位在本地完成。点击收藏后，插件先查个人文库。库内未匹配时，会按需向 Crossref、DataCite 或 OpenReview 查询 DOI、arXiv 编号、论坛编号或题名。Crossref 的回退查询最多发送所选引文的前 680 个字符。阅读说明和星级不参与外部题录查询。
 
-补全文时，插件会尝试论文的 arXiv / OpenReview 下载地址及 Zotero 的 DOI、条目网址和开放获取解析服务。已有同步附件但本地缺件时，会尝试通过已配置的 Zotero 文件同步取回。插件不上传正在阅读的整篇 PDF。目标分类目前限于个人文库。
+补全文时先检查原条目及其同步附件，然后尝试 arXiv / OpenReview 直链、Zotero 的 DOI、条目网址与开放获取服务。仍缺 PDF 时，插件按需向 OpenAlex、arXiv 和 Semantic Scholar 查询 DOI、arXiv 编号或论文题名，有 DOI 的条目还可查 CORE。不同论文可用的来源和版本不同。下载的文件经过 PDF 文件头校验后才作为附件保存。阅读说明、星级及正在阅读的 PDF 内容不参与这些查询。目标分类目前限于个人文库。
 
 ## 源码、构建与测试
 
@@ -85,17 +87,16 @@
 ```sh
 git clone https://github.com/chaohuawang-phd/zotero-citation-collector.git
 cd zotero-citation-collector
-git checkout v1.1.0
 python3 scripts/build.py
 node --test tests/*.cjs
 ```
 
-构建产物为 `dist/Citation-Collector-Zotero10.xpi`。v1.1.0 发布附件的 SHA-256 为 `88925a33885a5a8b907223959d325d18dd61875769ecde50e7f7a15aaeca755f`。也可以解压 XPI，查看 Zotero 实际加载的 `manifest.json` 和 `bootstrap.js`。
+构建产物为 `dist/Citation-Collector-Zotero10.xpi`。v1.2.0 安装包的 SHA-256 为 `e8056d30ab51d9b4c6f6a38c5526f8e3e156c0ddf237d52b12f70d2c182fef9e`。也可以解压 XPI，查看 Zotero 实际加载的 `manifest.json` 和 `bootstrap.js`。
 
 | 路径 | 内容 |
 | --- | --- |
 | [src/precision.js](src/precision.js)、[src/reader.js](src/reader.js) | PDF 字符和链接定位、引文预览与右键操作 |
-| [src/resolve.js](src/resolve.js)、[src/fulltext.js](src/fulltext.js) | 题录解析、查重、全文查找与附件校验 |
+| [src/resolve.js](src/resolve.js)、[src/pdf-sources.js](src/pdf-sources.js)、[src/fulltext.js](src/fulltext.js) | 题录解析、查重、多来源全文查找与附件校验 |
 | [src/picker.js](src/picker.js)、[src/controller.js](src/controller.js) | 分类与候选选择、事务保存及插件生命周期 |
 | [src/review.js](src/review.js) | 阅读说明和星级的存储、两列的注册与显示 |
 | [manifest.json](manifest.json)、[scripts/build.py](scripts/build.py) | 插件版本和兼容范围、XPI 打包脚本 |
