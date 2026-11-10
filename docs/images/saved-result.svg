@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="550" viewBox="0 0 1040 550" role="img" aria-labelledby="title desc">
+  <title id="title">核对 Zotero 中的收藏结果</title>
+  <desc id="desc">操作示意图。在我的文库的「数据选择 / 待读论文」分类中，展开 Yang 等 2024 年的论文即可看到已补充的 PDF。再次收藏同一已匹配条目时，右下方显示「已在该分类 · 待读论文」。</desc>
+  <defs>
+    <style>
+      text {font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif;fill:#192b38}
+      .muted {fill:#475e6e}
+      .section {fill:#476473;font-size:17px;font-weight:600}
+      .body {font-size:20px}
+      .label {font-size:17px}
+      .paper {font-family:Georgia,"Times New Roman",serif;font-size:22px;font-weight:bold}
+      .chevron {fill:none;stroke:#566c79;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+      .line {fill:none;stroke:#bdccd2;stroke-width:1.4}
+    </style>
+    <g id="folder" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+      <path d="M1 6V3.5a1.5 1.5 0 0 1 1.5-1.5H9l3 3h9.5A1.5 1.5 0 0 1 23 6.5V18a1.5 1.5 0 0 1-1.5 1.5h-19A1.5 1.5 0 0 1 1 18V6Z"/>
+      <path d="M2 7h20"/>
+    </g>
+  </defs>
+  <rect width="1040" height="550" rx="16" fill="#f4f7f8"/>
+  <text x="46" y="46" class="section">Zotero 文库 · 操作示意图</text>
+  <text x="44" y="99" font-size="39" font-weight="650">在目标分类中查看题录与 PDF</text>
+  <g id="library">
+    <rect x="44" y="125" width="952" height="337" rx="11" fill="#fff" stroke="#c7d5dc"/>
+    <path d="M55 125H985Q996 125 996 136V170H44V136Q44 125 55 125Z" fill="#e7eef1"/>
+    <path d="M44 170H996M327 170V462" class="line"/>
+    <text x="65" y="154" font-size="19" font-weight="600">我的文库</text>
+    <text x="344" y="154" class="label muted">数据选择 / 待读论文</text>
+    <g id="collection-tree" class="body">
+      <path d="m66 207 4 4 4-4m19 41 4 4 4-4" class="chevron"/>
+      <path d="M85 201h18v16H85zm3.5 3v9.5m4.5-9.5v9.5m4.5-9.5v9.5" fill="none" stroke="#566c79" stroke-width="1.6" stroke-linejoin="round"/>
+      <text x="114" y="216">我的文库</text>
+      <use href="#folder" x="111" y="238" color="#71848e"/>
+      <text x="146" y="256">数据选择</text>
+      <rect x="52" y="269" width="266" height="42" rx="5" fill="#daeae5"/>
+      <path d="M121 263v26h13" fill="none" stroke="#a2b9b0" stroke-width="1.5"/>
+      <use href="#folder" x="141" y="279" color="#386c5d"/>
+      <text x="175" y="297" font-weight="600" style="fill:#285d50">待读论文</text>
+    </g>
+    <g id="saved-item">
+      <path d="m345 206 5 5 5-5" class="chevron"/>
+      <g transform="translate(365 197)" fill="none" stroke="#637f90" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 1h13l6 6v17H1zM14 1v6h6M5 12h10M5 16h10"/>
+      </g>
+      <text x="399" y="216" class="paper">A CLIP-Powered Framework for Robust</text>
+      <text x="399" y="245" class="paper">and Generalizable Data Selection</text>
+      <text x="399" y="272" class="label muted">Yang 等，2024 · arXiv 2410.11215</text>
+      <path d="M375 232v74h18" class="line"/>
+      <path d="M406 292h14l7 7v19h-21zm14 0v7h7" fill="#fff2ec" stroke="#a75a42" stroke-width="1.6" stroke-linejoin="round"/>
+      <text x="438" y="313" class="body" font-weight="600">PDF</text>
+    </g>
+    <g id="repeat-notice">
+      <rect x="445" y="347" width="528" height="96" rx="7" fill="#fbfdfc" stroke="#869f95"/>
+      <text x="467" y="376" font-size="19" font-weight="600">已在该分类 · 待读论文</text>
+      <text x="467" y="405" class="label muted">A CLIP-Powered Framework for Robust and</text>
+      <text x="467" y="427" class="label muted">Generalizable Data Selection</text>
+    </g>
+  </g>
+  <path d="M44 483H996" stroke="#cbd7dc"/>
+  <text x="46" y="509" font-size="16" class="muted">有可下载的全文时，插件会把 PDF 挂在题录下。再次收藏已匹配的同一条目时，</text>
+  <text x="46" y="533" font-size="16" class="muted">右下角会提示「已在该分类」。</text>
+</svg>

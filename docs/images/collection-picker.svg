@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="398" viewBox="0 0 1080 398" role="img" aria-labelledby="title desc" xml:lang="zh-CN">
+  <title id="title">收藏引文时新建 Zotero 分类</title>
+  <desc id="desc">操作示意。第一步选择数据选择分类，点击新建分类。第二步填写待读论文作为分类名称，点击新建并收藏。</desc>
+  <rect x="0" y="0" width="1080" height="398" fill="#f5f7f9" />
+  <rect x="24" y="22" width="27" height="27" rx="14" fill="#284f70" stroke="none" stroke-width="1" />
+  <text x="37.5" y="35" fill="#ffffff" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="600" dominant-baseline="central" text-anchor="middle">1</text>
+  <text x="62" y="35" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="19" font-weight="600" dominant-baseline="central" text-anchor="start">选择目标分类，点击「新建分类…」</text>
+  <rect x="552" y="22" width="27" height="27" rx="14" fill="#284f70" stroke="none" stroke-width="1" />
+  <text x="565.5" y="35" fill="#ffffff" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="600" dominant-baseline="central" text-anchor="middle">2</text>
+  <text x="590" y="35" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="19" font-weight="600" dominant-baseline="central" text-anchor="start">填写分类名称，点击「新建并收藏」</text>
+  <rect x="25" y="69" width="504" height="222" rx="10" fill="#e0e4e7" stroke="none" stroke-width="1" />
+  <rect x="24" y="66" width="504" height="222" rx="10" fill="#ffffff" stroke="#acb4bc" stroke-width="1" />
+  <text x="42" y="90" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="17" font-weight="600" dominant-baseline="central" text-anchor="start">收藏到分类</text>
+  <text x="42" y="122" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="400" dominant-baseline="central" text-anchor="start">目标分类</text>
+  <rect x="42" y="136" width="468" height="32" rx="4" fill="#ffffff" stroke="#a4adb5" stroke-width="1" />
+  <text x="52" y="152" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="400" dominant-baseline="central" text-anchor="start">数据选择</text>
+  <polyline points="486,150 491,155 496,150" fill="none" stroke="#414a51" stroke-width="2" />
+  <rect x="42" y="183" width="93" height="30" rx="4" fill="#f5f5f6" stroke="#b6bbc0" stroke-width="1" />
+  <text x="53" y="198" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" dominant-baseline="central" text-anchor="start">新建分类…</text>
+  <rect x="39" y="180" width="99" height="36" rx="6" fill="none" stroke="#3775a6" stroke-width="2" />
+  <rect x="344" y="242" width="51" height="30" rx="4" fill="#f5f5f6" stroke="#b6bbc0" stroke-width="1" />
+  <text x="355" y="257" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" dominant-baseline="central" text-anchor="start">取消</text>
+  <rect x="403" y="242" width="107" height="30" rx="4" fill="#f5f5f6" stroke="#b6bbc0" stroke-width="1" />
+  <text x="414" y="257" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" dominant-baseline="central" text-anchor="start">收藏到此分类</text>
+  <rect x="553" y="69" width="504" height="278" rx="10" fill="#e0e4e7" stroke="none" stroke-width="1" />
+  <rect x="552" y="66" width="504" height="278" rx="10" fill="#ffffff" stroke="#acb4bc" stroke-width="1" />
+  <text x="570" y="90" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="17" font-weight="600" dominant-baseline="central" text-anchor="start">收藏到分类</text>
+  <text x="570" y="122" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="400" dominant-baseline="central" text-anchor="start">上级分类</text>
+  <rect x="570" y="136" width="468" height="32" rx="4" fill="#ffffff" stroke="#a4adb5" stroke-width="1" />
+  <text x="580" y="152" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="400" dominant-baseline="central" text-anchor="start">数据选择</text>
+  <polyline points="1014,150 1019,155 1024,150" fill="none" stroke="#414a51" stroke-width="2" />
+  <text x="570" y="189" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="400" dominant-baseline="central" text-anchor="start">分类名称</text>
+  <rect x="570" y="203" width="468" height="32" rx="4" fill="#ffffff" stroke="#a4adb5" stroke-width="1" />
+  <text x="580" y="219" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="15" font-weight="400" dominant-baseline="central" text-anchor="start">待读论文</text>
+  <rect x="570" y="251" width="107" height="30" rx="4" fill="#f5f5f6" stroke="#b6bbc0" stroke-width="1" />
+  <text x="581" y="266" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" dominant-baseline="central" text-anchor="start">返回已有分类</text>
+  <rect x="886" y="297" width="51" height="30" rx="4" fill="#f5f5f6" stroke="#b6bbc0" stroke-width="1" />
+  <text x="897" y="312" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" dominant-baseline="central" text-anchor="start">取消</text>
+  <rect x="945" y="297" width="93" height="30" rx="4" fill="#f5f5f6" stroke="#b6bbc0" stroke-width="1" />
+  <text x="956" y="312" fill="#242b32" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" dominant-baseline="central" text-anchor="start">新建并收藏</text>
+  <rect x="942" y="294" width="99" height="36" rx="6" fill="none" stroke="#3775a6" stroke-width="2" />
+  <polyline points="24,365 1056,365" fill="none" stroke="#c9d0d6" stroke-width="1" />
+  <text x="24" y="383" fill="#4b5966" font-family="'Heiti SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif" font-size="14" font-weight="400" dominant-baseline="central" text-anchor="start">操作示意 · 示例结果为「数据选择 / 待读论文」</text>
+</svg>

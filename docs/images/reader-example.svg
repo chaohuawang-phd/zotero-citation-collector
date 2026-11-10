@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="600" viewBox="0 0 1040 600" role="img" aria-labelledby="title desc">
+  <title id="title">在 Zotero 正文中右键收藏跨行引文</title>
+  <desc id="desc">操作示意图。模拟段落中 Yang et al. 在行末，2024 在下一行开头。对年份单击右键，菜单可收藏到已选的「数据选择」分类，或另选分类。该引文对应 Yang 等人在 2024 年发表的 A CLIP-Powered Framework for Robust and Generalizable Data Selection。</desc>
+  <defs>
+    <style>
+      .ui {font-family:"PingFang SC","Noto Sans CJK SC","Microsoft YaHei",Arial,sans-serif}
+      .serif {font-family:Georgia,"Times New Roman",serif}
+      .ink {fill:#192b38}
+      .secondary {fill:#475e6e}
+      .link {fill:#285f85}
+    </style>
+  </defs>
+  <rect width="1040" height="600" rx="16" fill="#f4f7f8"/>
+  <g class="ui">
+    <text x="46" y="46" font-size="17" font-weight="600" fill="#476473">Zotero 阅读器 · 操作示意图</text>
+    <text x="44" y="99" class="ink" font-size="39" font-weight="650">在正文引用上右键收藏</text>
+  </g>
+  <rect x="44" y="126" width="952" height="217" rx="11" fill="#fff" stroke="#c7d5dc"/>
+  <path d="M55 126H985Q996 126 996 137V171H44V137Q44 126 55 126Z" fill="#e7eef1"/>
+  <path d="M44 171H996" stroke="#c7d5dc"/>
+  <g class="ui">
+    <text x="72" y="155" class="ink" font-size="18" font-weight="600">Data Agent</text>
+    <text x="191" y="155" class="secondary" font-size="16">第 1 页 · 引文示例</text>
+  </g>
+  <g class="serif" font-size="24">
+    <text x="530" y="228" class="ink" text-anchor="end">Prior studies have explored data selection (</text>
+    <rect x="532" y="202" width="132" height="34" rx="5" fill="#fde5ae"/>
+    <text x="539" y="228" class="ink" textLength="117" lengthAdjust="spacingAndGlyphs">Yang et al.,</text>
+    <rect x="70" y="251" width="65" height="34" rx="5" fill="#f9cf72" stroke="#b67d1d" stroke-width="1.3"/>
+    <text x="76" y="276" class="ink" textLength="52" lengthAdjust="spacingAndGlyphs">2024</text>
+    <text x="136" y="276" class="link" textLength="659" lengthAdjust="spacingAndGlyphs">; Xia et al., 2023; Yang et al., 2023b; Zhang et al., 2024).</text>
+  </g>
+  <path d="M118 278l3 29 7-7 6 12 6-3-6-12 11 0Z" fill="#203441" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+  <text x="158" y="315" class="ui secondary" font-size="16">在跨到下一行的年份上单击右键</text>
+  <path d="M107 341v20q0 7 7 7h12" fill="none" stroke="#63808f" stroke-width="1.5"/>
+  <path d="M120 363l7 5-7 5" fill="none" stroke="#63808f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="140" y="349" width="344" height="126" rx="9" fill="#fff" stroke="#bdcbd2"/>
+  <text x="161" y="376" class="ui secondary" font-size="15">右键菜单中的收藏命令</text>
+  <rect x="150" y="384" width="324" height="39" rx="5" fill="#215b5b"/>
+  <text x="166" y="410" class="ui" fill="white" font-size="20" font-weight="600">收藏到「数据选择」</text>
+  <text x="166" y="451" class="ui ink" font-size="20">另选分类并收藏…</text>
+  <path d="M507 403h33m-7-6 8 6-8 6" fill="none" stroke="#63808f" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="558" y="349" width="438" height="175" rx="9" fill="#eaf3ef" stroke="#b9d4c9"/>
+  <text x="582" y="380" class="ui" fill="#2d6955" font-size="16" font-weight="600">本次收藏的论文</text>
+  <text x="582" y="414" class="serif ink" font-size="23" font-weight="bold">A CLIP-Powered Framework</text>
+  <text x="582" y="443" class="serif ink" font-size="23" font-weight="bold">for Robust and Generalizable</text>
+  <text x="582" y="472" class="serif ink" font-size="23" font-weight="bold">Data Selection</text>
+  <text x="582" y="501" class="ui secondary" font-size="16">Yang 等，2024 · arXiv 2410.11215</text>
+  <path d="M44 552H996" stroke="#cbd7dc"/>
+  <text x="46" y="579" class="ui secondary" font-size="15">示例中的「数据选择」是已选分类。首次收藏时，先选择或新建自己的分类。</text>
+</svg>
