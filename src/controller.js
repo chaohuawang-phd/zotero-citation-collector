@@ -5,6 +5,7 @@ let removeCollectorReader = null;
 let collectorActive = false;
 let collectorWriteQueue = Promise.resolve();
 const pendingCollections = new Map();
+const pendingReviewsByWindow = new WeakMap();
 const pendingFulltexts = new Set();
 const collectorNotices = new Map();
 
@@ -117,7 +118,7 @@ async function resolveDestinationForSave(plan, libraryID) {
   return collection;
 }
 
-async function saveCandidate(candidate, destination) {
+async function saveCandidate(candidate, destination, review) {
   // Serialize final lookup + write, including clicks from different reader tabs.
   const write = async () => {
     if (!collectorActive) return null;
@@ -125,12 +126,23 @@ async function saveCandidate(candidate, destination) {
     return Zotero.DB.executeTransaction(async () => {
       const existing = await CitationResolver.findExisting(candidate, libraryID);
       if (!collectorActive) return null;
-      const collection = await resolveDestinationForSave(destination, libraryID);
-      if (existing && existing.inCollection(collection.id)) return { item: existing, collection, status: "已在该分类" };
       const item = existing || CitationResolver.makeItem(candidate, libraryID);
-      item.addToCollection(collection.id);
-      await item.save();
-      return { item, collection, status: existing ? "已将库内条目加入分类" : "已收藏" };
+      if (review) {
+        const current = CitationReview.read(item);
+        for (const field of Object.keys(review.patch)) {
+          if (current[field] !== review.initial[field] && current[field] !== review.patch[field]) {
+            throw new Error("这篇论文的标注已被更改。请重新打开标注，核对最新内容后再保存。");
+          }
+        }
+      }
+      const collection = await resolveDestinationForSave(destination, libraryID);
+      const alreadyInCollection = existing && existing.inCollection(collection.id);
+      const edited = review && CitationReview.apply(item, review.patch);
+      if (!alreadyInCollection) item.addToCollection(collection.id);
+      if (!alreadyInCollection || edited) await item.save();
+      let status = existing ? "已将库内条目加入分类" : "已收藏";
+      if (alreadyInCollection) status = edited ? "已更新阅读标注" : "已在该分类";
+      return { item, collection, status };
     });
   };
   const result = collectorWriteQueue.then(write);
@@ -138,14 +150,22 @@ async function saveCandidate(candidate, destination) {
   return result;
 }
 
-async function collectReference({ text, anchor, chooseCollection }) {
+async function collectReference({ text, anchor, chooseCollection, annotate = false }) {
   if (!collectorActive || !text?.trim()) return "";
   const win = activeCollectorWindow(anchor);
-  const destination = (!chooseCollection && lastDestination()) || await chooseDestination(win);
+  const previous = !chooseCollection && lastDestination();
+  const destination = previous ? { key: previous.key, annotate } : await chooseDestination(win, annotate);
   if (!destination || !collectorActive || win.closed) return "";
+  // Each reader window owns its editor. A quick save must never consume an
+  // annotated request, nor should a second window inherit the first one's form.
+  let pending = pendingCollections;
+  if (destination.annotate) {
+    if (!pendingReviewsByWindow.has(win)) pendingReviewsByWindow.set(win, new Map());
+    pending = pendingReviewsByWindow.get(win);
+  }
   const lookupKey = JSON.stringify([destination.key || null, destination.parentKey || null,
     destination.key ? null : siblingName(destination.name), text]);
-  if (pendingCollections.has(lookupKey)) return pendingCollections.get(lookupKey);
+  if (pending.has(lookupKey)) return pending.get(lookupKey);
   const job = (async () => {
     const waiting = setTimeout(() => {
       if (collectorActive) notifyCollector("正在核对引文", text.slice(0, 160), win);
@@ -167,18 +187,27 @@ async function collectReference({ text, anchor, chooseCollection }) {
       if (index < 0) return "";
     }
     const candidate = resolved.candidates[index];
-    const result = await saveCandidate(candidate, destination);
+    let review;
+    if (destination.annotate) {
+      const existing = await CitationResolver.findExisting(candidate, Zotero.Libraries.userLibraryID);
+      if (!collectorActive || win.closed) return "";
+      const initial = existing ? CitationReview.read(existing) : { note: "", rating: 0 };
+      const patch = await editCitationReview(win, { title: candidate.title, initial });
+      if (!patch || !collectorActive || win.closed) return "";
+      if (Object.keys(patch).length) review = { initial, patch };
+    }
+    const result = await saveCandidate(candidate, destination, review);
     if (!result) return "";
     Zotero.Prefs.set(COLLECTION_PREF, result.collection.key);
     notifyCollector(result.status + " · " + result.collection.name, result.item.getField("title"), win);
     completeFulltext(result.item, candidate);
     return result.status;
   })();
-  pendingCollections.set(lookupKey, job);
+  pending.set(lookupKey, job);
   try {
     return await job;
   } finally {
-    pendingCollections.delete(lookupKey);
+    pending.delete(lookupKey);
   }
 }
 
@@ -205,10 +234,12 @@ async function startup() {
       return collection ? "收藏到「" + collection.name + "」" : "收藏到…";
     }
   });
+  CitationReview.registerColumns(COLLECTOR_ID);
 }
 
 function shutdown() {
   collectorActive = false;
+  CitationReview.unregisterColumns();
   closeCollectorDialogs();
   for (const win of collectorNotices.keys()) clearCollectorNotice(win);
   removeCollectorReader?.();

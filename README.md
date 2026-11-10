@@ -1,22 +1,22 @@
 # 一键收藏引文· Zotero Citation Collector
 
-在 Zotero 桌面版的 PDF 阅读器里，指向正文中的一条引用，即可把**被引用的论文**收藏到个人文库的指定分类。插件会优先复用库内已有条目，并在收藏后查找可用的全文 PDF。
+在 Zotero 桌面版的 PDF 阅读器里，指向正文中的一条引用，即可把**被引用的论文**收藏到个人文库的指定分类。插件会优先复用库内已有条目，并在收藏后查找可用的全文 PDF。需要排阅读顺序时，可以顺手写下收藏理由、标上 1–5 星，回到文库直接按重要性排序。
 
-**适用版本：Zotero 桌面版 10.0.x。** [下载安装包 v1.0.2](https://github.com/chaohuawang-phd/zotero-citation-collector/releases/download/v1.0.2/Citation-Collector-Zotero10.xpi) · [查看版本说明](https://github.com/chaohuawang-phd/zotero-citation-collector/releases/tag/v1.0.2) · [跳到图文教程](#example)
+**适用版本：Zotero 桌面版 10.0.x。** [下载安装包 v1.1.0](https://github.com/chaohuawang-phd/zotero-citation-collector/releases/download/v1.1.0/Citation-Collector-Zotero10.xpi) · [查看版本说明](https://github.com/chaohuawang-phd/zotero-citation-collector/releases/tag/v1.1.0) · [引文收藏教程](#example) · [阅读标注与星级](#reading-priority)
 
 ## 安装
 
 1. 下载上方的 `Citation-Collector-Zotero10.xpi`。
 2. 打开 Zotero 桌面版，进入 **工具 → 插件**（Tools → Plugins）。将下载的 XPI 拖入插件管理窗口，或在该窗口的齿轮菜单中选择从文件安装。
-3. 在插件列表确认 **正文引文收藏 1.0.2** 已启用。在 Zotero 内打开一篇 PDF，悬停在正文引文上即可开始。已打开的 PDF 若未出现按钮，可关闭阅读标签页再打开。
+3. 在插件列表确认 **正文引文收藏 1.1.0** 已启用。在 Zotero 内打开一篇 PDF，悬停在正文引文上即可开始。已打开的 PDF 若未出现按钮，可关闭阅读标签页再打开。
 
-升级时，从 [Releases](https://github.com/chaohuawang-phd/zotero-citation-collector/releases) 下载新 XPI，重复上述安装步骤。1.0.2 使用手动升级。
+升级时，从 [Releases](https://github.com/chaohuawang-phd/zotero-citation-collector/releases) 下载新 XPI，重复上述安装步骤。1.1.0 使用手动升级。
 
 <a id="example"></a>
 
 ## 图文教程：从《Data Agent》收藏 Yang 等人的论文
 
-下面三张操作示意图按 v1.0.2 的命令和提示绘制，使用示例分类。可打开[《Data Agent》论文页](https://proceedings.mlr.press/v306/yang26bq.html)，下载原版 PDF，在自己的 Zotero 中跟着操作。
+下面的操作示意图使用示例分类。可打开[《Data Agent》论文页](https://proceedings.mlr.press/v306/yang26bq.html)，下载原版 PDF，在自己的 Zotero 中跟着操作。
 
 ### 1. 在跨行的引用上选中目标论文
 
@@ -51,6 +51,18 @@
 
 题录先保存，PDF 在后台查找。库里已有可用 PDF 时会直接复用。遇到无开放全文、站点限流或下载失败，题录仍保留，下次点击收藏可以重试。
 
+<a id="reading-priority"></a>
+
+## 用星级安排阅读顺序
+
+1. 在 PDF 引文预览或右键菜单中点 **标注并收藏…**。需要同时更换或新建分类时，在分类窗口勾选 **收藏前填写阅读说明或评分**。直接点原来的 **收藏到…** 可跳过标注。
+2. 核对窗口中的论文题名。在 **阅读说明** 写下理由，例如「这是一篇关于马尔可夫的论文。」在 **重要性** 选择 ★ 到 ★★★★★。两项都可单独填写，点 **保存并收藏**。选 **未评分** 可清除已有评分。
+3. 回到 Zotero 主窗口，在目标分类的论文列表中查看 **重要性** 和 **阅读说明** 两列。点击 **重要性** 列标题，让五星论文排在前面。若列未显示，右键点击列表任一列标题，勾选这两列。
+
+![在收藏时给一篇示例论文添加马尔可夫相关说明及四星，文库按重要性排列，未评分的论文留空](docs/images/reading-priority.svg)
+
+同一篇论文在不同分类中共用一份标注。再次点 **标注并收藏…** 可以查看和修改原值，普通收藏会保留已有标注。完整的多行说明和星级保存在条目右侧的 **其他（Extra）** 字段，列宽有限时可在那里阅读全文。启用 Zotero 数据同步后，这些内容随条目同步，显示自定义列的桌面端也需要安装本插件。
+
 ## 遇到这些情况时
 
 | 现象 | 操作 |
@@ -62,7 +74,7 @@
 
 ## 数据如何使用
 
-悬停和引文定位在本地完成。点击收藏后，插件先查个人文库。库内未匹配时，会按需向 Crossref、DataCite 或 OpenReview 查询 DOI、arXiv 编号、论坛编号或题名。Crossref 的回退查询最多发送所选引文的前 680 个字符。
+悬停和引文定位在本地完成。点击收藏后，插件先查个人文库。库内未匹配时，会按需向 Crossref、DataCite 或 OpenReview 查询 DOI、arXiv 编号、论坛编号或题名。Crossref 的回退查询最多发送所选引文的前 680 个字符。阅读说明和星级不参与外部题录查询。
 
 补全文时，插件会尝试论文的 arXiv / OpenReview 下载地址及 Zotero 的 DOI、条目网址和开放获取解析服务。已有同步附件但本地缺件时，会尝试通过已配置的 Zotero 文件同步取回。插件不上传正在阅读的整篇 PDF。目标分类目前限于个人文库。
 
@@ -73,20 +85,21 @@
 ```sh
 git clone https://github.com/chaohuawang-phd/zotero-citation-collector.git
 cd zotero-citation-collector
-git checkout v1.0.2
+git checkout v1.1.0
 python3 scripts/build.py
 node --test tests/*.cjs
 ```
 
-构建产物为 `dist/Citation-Collector-Zotero10.xpi`。v1.0.2 发布附件的 SHA-256 为 `24cfd9a89bad451fc07d76a845a4471888ca21787ffc02d18117c2fc3869fac6`。也可以解压 XPI，查看 Zotero 实际加载的 `manifest.json` 和 `bootstrap.js`。
+构建产物为 `dist/Citation-Collector-Zotero10.xpi`。v1.1.0 发布附件的 SHA-256 为 `88925a33885a5a8b907223959d325d18dd61875769ecde50e7f7a15aaeca755f`。也可以解压 XPI，查看 Zotero 实际加载的 `manifest.json` 和 `bootstrap.js`。
 
 | 路径 | 内容 |
 | --- | --- |
 | [src/precision.js](src/precision.js)、[src/reader.js](src/reader.js) | PDF 字符和链接定位、引文预览与右键操作 |
 | [src/resolve.js](src/resolve.js)、[src/fulltext.js](src/fulltext.js) | 题录解析、查重、全文查找与附件校验 |
 | [src/picker.js](src/picker.js)、[src/controller.js](src/controller.js) | 分类与候选选择、事务保存及插件生命周期 |
+| [src/review.js](src/review.js) | 阅读说明和星级的存储、两列的注册与显示 |
 | [manifest.json](manifest.json)、[scripts/build.py](scripts/build.py) | 插件版本和兼容范围、XPI 打包脚本 |
 | [tests/](tests/) | 跨行识别、候选消歧、分类写入、查重与 PDF 附件的离线回归测试 |
-| [docs/images/](docs/images/) | 三张可编辑的 SVG 示意图、分类图的 PNG 和绘图脚本 |
+| [docs/images/](docs/images/) | 可编辑的 SVG 操作示意图、分类图的 PNG 和绘图脚本 |
 
 源码和本项目创作的操作图使用 [MIT 许可证](LICENSE)。文中引用的论文版权归原权利人所有。

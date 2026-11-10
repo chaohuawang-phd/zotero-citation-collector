@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "正文引文收藏",
-  "version": "1.0.2",
-  "description": "在 Zotero 的 PDF 引用预览中收藏论文到指定分类，优先复用已有条目。",
+  "version": "1.1.0",
+  "description": "从 PDF 正文收藏引文，可添加阅读说明和重要性星级，在文库按优先级阅读。",
   "applications": {
     "zotero": {
       "id": "citation-collector@research-tools.local",

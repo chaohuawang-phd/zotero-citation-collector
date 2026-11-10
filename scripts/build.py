@@ -14,9 +14,8 @@ def javascript(*names):
 
 
 def main():
-    runtime = javascript("precision", "reader", "resolve", "fulltext")
+    runtime = javascript("precision", "reader", "review", "resolve", "fulltext")
     interface = javascript("picker", "controller")
-    # Retain the section spacing of the original v1.0.2 bootstrap.
     script = runtime + b"\n\n\n\n" + interface
     files = {"manifest.json": (ROOT / "manifest.json").read_bytes(), "bootstrap.js": script}
     OUTPUT.parent.mkdir(exist_ok=True)

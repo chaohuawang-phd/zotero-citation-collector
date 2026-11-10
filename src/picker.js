@@ -39,6 +39,15 @@ function openCollectorDialog(win, title, cancelled, build) {
       #citation-collector-dialog .collector-options { max-height: 36vh; overflow-y: auto; }
       #citation-collector-dialog .collector-option { display: flex; align-items: start; gap: .45rem; padding: .4rem .2rem; overflow-wrap: anywhere; }
       #citation-collector-dialog .collector-option input { flex: none; margin-top: .1rem; }
+      #citation-collector-dialog .collector-paper-title { font-weight: 600; margin-block: 0 1rem; }
+      #citation-collector-dialog textarea {
+        box-sizing: border-box; width: 100%; min-height: 5.5rem; resize: vertical;
+        font: inherit; padding: .35rem .45rem;
+      }
+      #citation-collector-dialog .collector-rating { margin: 0; padding: 0; border: 0; }
+      #citation-collector-dialog .collector-rating legend { margin-bottom: .25rem; padding: 0; }
+      #citation-collector-dialog .collector-rating-options { display: flex; flex-wrap: wrap; gap: .25rem .6rem; }
+      #citation-collector-dialog .collector-rating-options label { display: inline-flex; align-items: center; gap: .15rem; cursor: pointer; }
     `);
     const form = element("form");
     const body = element("div");
@@ -105,7 +114,7 @@ function openCollectorDialog(win, title, cancelled, build) {
   });
 }
 
-async function chooseDestination(win) {
+async function chooseDestination(win, annotate = false) {
   const rows = Zotero.Collections.getByLibrary(Zotero.Libraries.userLibraryID, true)
     .filter(collection => !collection.deleted)
     .map(collection => ({ key: collection.key, path: collectionPath(collection) }))
@@ -158,7 +167,18 @@ async function chooseDestination(win) {
     back.type = "button";
     back.hidden = !rows.length;
     create.append(error, back);
-    body.append(existing, create);
+    const reviewLabel = element("label");
+    reviewLabel.className = "collector-option";
+    const review = element("input");
+    review.type = "checkbox";
+    review.checked = annotate;
+    reviewLabel.append(review, element("span", "收藏前填写阅读说明或评分"));
+    body.append(existing, create, reviewLabel);
+
+    function select(plan) {
+      if (review.checked) plan.annotate = true;
+      finish(plan);
+    }
 
     function setMode(creating) {
       existing.hidden = creating;
@@ -179,7 +199,7 @@ async function chooseDestination(win) {
       initialFocus: rows.length ? destination : name,
       accept() {
         if (create.hidden) {
-          if (destination.value) finish({ key: destination.value });
+          if (destination.value) select({ key: destination.value });
           return;
         }
         const trimmed = name.value.trim();
@@ -190,8 +210,59 @@ async function chooseDestination(win) {
           name.focus();
           return;
         }
-        finish({ parentKey: parent.value || null, name: trimmed });
+        select({ parentKey: parent.value || null, name: trimmed });
       }
+    };
+  });
+}
+
+function editCitationReview(win, { title, initial = {} }) {
+  return openCollectorDialog(win, "标注并收藏", null, ({ element, body, submit, finish }) => {
+    const paper = element("p", title);
+    paper.className = "collector-paper-title";
+    const noteLabel = element("label");
+    noteLabel.className = "collector-field";
+    const note = element("textarea");
+    note.rows = 4;
+    note.value = initial.note ?? "";
+    // HTML text controls normalize line endings. Compare the displayed value
+    // so submitting an unchanged note never rewrites what Zotero stored.
+    const initialNote = note.value;
+    noteLabel.append(element("span", "阅读说明"), note);
+
+    const group = element("fieldset");
+    group.className = "collector-rating";
+    group.append(element("legend", "重要性"));
+    const options = element("div");
+    options.className = "collector-rating-options";
+    const initialRating = initial.rating ?? 0;
+    const ratings = [];
+    for (let rating = 0; rating <= 5; rating++) {
+      const label = element("label");
+      const radio = element("input");
+      radio.type = "radio";
+      radio.name = "citation-collector-review-rating";
+      radio.value = String(rating);
+      radio.checked = rating === initialRating;
+      const accessibleLabel = rating ? rating + " 星" : "未评分";
+      radio.setAttribute("aria-label", accessibleLabel);
+      label.title = accessibleLabel;
+      label.append(radio, element("span", rating ? "★".repeat(rating) : "未评分"));
+      options.append(label);
+      ratings.push(radio);
+    }
+    group.append(options);
+    body.append(paper, noteLabel, group);
+    submit.textContent = "保存并收藏";
+    return {
+      initialFocus: note,
+      accept() {
+        const patch = {};
+        if (note.value !== initialNote) patch.note = note.value;
+        const selected = ratings.find(radio => radio.checked);
+        if (selected && Number(selected.value) !== initialRating) patch.rating = Number(selected.value);
+        finish(patch);
+      },
     };
   });
 }

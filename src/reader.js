@@ -11,6 +11,9 @@ function installCitationReader({ onCollect, getLabel, pluginID }) {
     group.setAttribute(marker, "actions");
     group.style.cssText = "display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding:3px 0;pointer-events:auto;";
     const primary = doc.createElement("button");
+    const annotate = doc.createElement("button");
+    annotate.textContent = "标注并收藏…";
+    annotate.title = "填写这篇论文的阅读说明或重要性评分";
     const choose = doc.createElement("button");
     choose.textContent = "另选分类…";
     choose.title = "为这篇文献选择收藏分类";
@@ -25,7 +28,7 @@ function installCitationReader({ onCollect, getLabel, pluginID }) {
     updateLabel();
     group.addEventListener("pointerenter", updateLabel);
     group.addEventListener("focusin", updateLabel);
-    for (const button of [primary, choose]) {
+    for (const button of [primary, annotate, choose]) {
       button.type = "button";
       button.style.cssText = "font:inherit;color:inherit;border:1px solid currentColor;border-radius:4px;background:transparent;padding:2px 6px;cursor:pointer;";
       // Keep the native row's navigation and other plugins' click handlers
@@ -39,24 +42,25 @@ function installCitationReader({ onCollect, getLabel, pluginID }) {
         if (!active || primary.disabled) return;
         const text = getText().trim();
         if (!text) return;
-        primary.disabled = choose.disabled = true;
+        primary.disabled = annotate.disabled = choose.disabled = true;
         status.textContent = "正在核对…";
         try {
           const result = await onCollect({
             text, reader, anchor: button, chooseCollection: button === choose || event.altKey,
+            annotate: button === annotate,
           });
           if (active && group.isConnected) status.textContent = result || "";
         } catch (error) {
           if (active && group.isConnected) status.textContent = error.message || String(error);
         } finally {
           if (active && group.isConnected) {
-            primary.disabled = choose.disabled = false;
+            primary.disabled = annotate.disabled = choose.disabled = false;
             updateLabel();
           }
         }
       });
     }
-    group.append(primary, choose, status);
+    group.append(primary, annotate, choose, status);
     return group;
   }
 
@@ -300,11 +304,11 @@ function installCitationReader({ onCollect, getLabel, pluginID }) {
       if (text && !texts.includes(text)) texts.push(text);
     }
     if (!texts.length) return;
-    const menuItem = (label, chooseCollection) => {
+    const menuItem = (label, chooseCollection, annotate = false) => {
       const command = text => () => {
         if (!active) return;
         const anchor = reader._iframeWindow?.document?.documentElement;
-        Promise.resolve(onCollect({ text, reader, anchor, chooseCollection }))
+        Promise.resolve(onCollect({ text, reader, anchor, chooseCollection, annotate }))
           .catch(error => Zotero.logError(error));
       };
       if (texts.length === 1) return { label, onCommand: command(texts[0]) };
@@ -317,7 +321,11 @@ function installCitationReader({ onCollect, getLabel, pluginID }) {
         }))],
       };
     };
-    append(menuItem(getLabel(reader) || "收藏到…", false), menuItem("另选分类并收藏…", true));
+    append(
+      menuItem(getLabel(reader) || "收藏到…", false),
+      menuItem("标注并收藏…", false, true),
+      menuItem("另选分类并收藏…", true)
+    );
   };
 
   // Reader._dispatchEvent passes event.doc out of wrappedJSObject. Running a

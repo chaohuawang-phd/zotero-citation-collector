@@ -112,7 +112,7 @@ var CitationResolver = (() => {
 
   function paperFromItem(item) {
     const field = name => String(item.getField(name) || "");
-    const extra = field("extra");
+    const extra = CitationReview.bibliographicExtra(field("extra"));
     const url = field("url");
     const doi = doiOf(field("DOI") || (extra.match(/^DOI:\s*(.+)$/im) || [])[1] || "");
     const creators = item.getCreators();

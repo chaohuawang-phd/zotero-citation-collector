@@ -34,7 +34,7 @@ test("resolving a line-broken title reuses the existing item without making a ne
     },
     CreatorTypes: { getPrimaryIDForType: () => 1 },
   };
-  const resolver = vm.runInNewContext(src("resolve") + "\nCitationResolver;", { Zotero: zotero });
+  const resolver = vm.runInNewContext(src("review") + "\n" + src("resolve") + "\nCitationResolver;", { Zotero: zotero });
   const citation = "Xia, X. Mod- erate coreset selection for learning. In Conference Proceedings, 2023.";
   const match = await resolver.resolve(citation, 1);
   assert.equal(match.confident, true);
@@ -81,6 +81,7 @@ async function startCollector({ destination, selectCandidate = 0, confident = tr
     Zotero: zotero, setTimeout, clearTimeout,
     installCitationReader: options => { onCollect = options.onCollect; return () => {}; },
     chooseDestination: async () => destination,
+    CitationReview: { registerColumns() {}, unregisterColumns() {} },
     chooseCandidateIndex: async () => selectCandidate,
     CitationFulltext: { ensure: async () => ({ status: "exists" }) },
     CitationResolver: {
