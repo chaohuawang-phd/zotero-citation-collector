@@ -1,4 +1,4 @@
-# 正文引文收藏 · Zotero Citation Collector
+# 一键收藏引文· Zotero Citation Collector
 
 在 Zotero 桌面版的 PDF 阅读器里，指向正文中的一条引用，即可把**被引用的论文**收藏到个人文库的指定分类。插件会优先复用库内已有条目，并在收藏后查找可用的全文 PDF。
 
